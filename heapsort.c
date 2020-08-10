@@ -36,8 +36,8 @@ void print_array(int num[]){
 
 
 //Take array as binary tree (level-order traversal).
-//array[0 to max_index]
-//Child(ren) of num[i]: num[2i+1] (, num[2i+2]) .
+//only find max_value in each turn
+//child of num[i]: num[2i+1] (, num[2i+2]) 
 
 void max_heap(int num[], int root, int max_index){
 	int left_child, right_child;
@@ -45,8 +45,7 @@ void max_heap(int num[], int root, int max_index){
 	right_child=root*2+2;
 
 	if(left_child > max_index)
-		return;
-	
+		return;	
 
 	//find the biggest of num[root], num[left], num[right]
 	int biggest=root;
