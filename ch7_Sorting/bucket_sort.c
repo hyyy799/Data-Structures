@@ -70,7 +70,6 @@ void bucket_sort(int num[]){
 		printf("===\nPut into bucket!\n");
 		print_bucket(bucket, record);
 
-		//A
 		//put them back to num[]
 		//i for num[], j, k for bucket[j][k]
 		i=0;
