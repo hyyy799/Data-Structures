@@ -3,10 +3,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#define total 10
+#define total 15
+#define basic 10
 
 void print_array(int num[]);
-void print_bucket(int bucket[total][total], int record[total]);
+void print_bucket(int bucket[basic][total], int record[basic]);
 void bucket_sort(int num[]);
 
 int main(){
@@ -36,9 +37,9 @@ void print_array(int num[]){
 	printf("\n");
 }
 
-void print_bucket(int bucket[total][total], int record[total]){
+void print_bucket(int bucket[basic][total], int record[basic]){
 	register int i, j;
-	for(i=0;i<total;i++){
+	for(i=0;i<basic;i++){
 		printf("%d | ",i);
 		for(j=0;j<record[i];j++){
 			printf("%d ", bucket[i][j]);
@@ -48,8 +49,8 @@ void print_bucket(int bucket[total][total], int record[total]){
 }
 
 void bucket_sort(int num[]){
-	int bucket[total][total]={0};
-	int record[total]={0}; // how many numbers in one bucket
+	int bucket[basic][total]={0};
+	int record[basic]={0}; // how many numbers in one bucket
 	
 	int n; // for digit
 	int digit;
@@ -69,6 +70,7 @@ void bucket_sort(int num[]){
 		printf("===\nPut into bucket!\n");
 		print_bucket(bucket, record);
 
+		//A
 		//put them back to num[]
 		//i for num[], j, k for bucket[j][k]
 		i=0;
