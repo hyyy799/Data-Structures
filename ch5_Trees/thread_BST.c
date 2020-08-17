@@ -16,45 +16,53 @@ struct node{
     //true if right_child connect to successor
 };
 
-struct node* insert(struct node * head, struct node *root, int input);
-struct node *find_successor(struct node *head, struct node *ptr);
-void inorder(struct node *head);
+struct node* insert(struct node *root, int input);
+struct node *find_successor(struct node *root, struct node *ptr);
+void inorder(struct node *root);
 
 int main(){
-    struct node *head = malloc(sizeof(struct node));
-    struct node *root = NULL;
-    head->left_child = root;
-    head->right_child = head;
-
-    root = insert(head, root, 20); 
-    root = insert(head, root, 10); 
-    root = insert(head, root, 30); 
-    root = insert(head, root, 5); 
-    root = insert(head, root, 16); 
-    root = insert(head, root, 14); 
-    root = insert(head, root, 17); 
-    root = insert(head, root, 13); 
+    struct node *root = malloc(sizeof(struct node));
+    root->left_child = root;
+    root->right_child = root;
+    root->left_thread = true;
+    root->right_thread = false;
+    
+    root = insert(root, 20); 
+    root = insert(root, 10); 
+    root = insert(root, 30); 
+    root = insert(root, 5); 
+    root = insert(root, 16); 
+    root = insert(root, 14); 
+    root = insert(root, 17); 
+    root = insert(root, 13);
   
-    inorder(head); 
+    inorder(root); 
 
     return 0;
 }
 
-struct node *insert(struct node *head, struct node *root, int input){
+//return root
+struct node *insert(struct node *root, int input){
+    struct node *ptr, *parent;
+    ptr = root->left_child;
+    parent = root;
 
     // first node
-    if(!root){
-        root=malloc(sizeof(struct node));
-        root->data = input;
-        root->left_child = head;
-        root->right_thread = head;
-        root->left_thread = true;
-        root->right_thread = true;
+    if(ptr == root){
+        struct node *tmp;
+        tmp = malloc(sizeof(struct node));
+
+        tmp->data = input;
+        tmp->left_thread = true;
+        tmp->right_thread = true;
+        tmp->left_child = parent->left_child;
+        tmp->right_thread = parent;
+
+        parent->left_thread = false;
+        parent->left_child = tmp;
+
         return root;
     }
-
-    struct node* ptr = root;
-    struct node* parent;
 
     //find insert site
     while(ptr){
@@ -104,10 +112,10 @@ struct node *insert(struct node *head, struct node *root, int input){
     return root; 
 }
 
-struct node *find_successor(struct node *head, struct node *ptr){
+struct node *find_successor(struct node *root, struct node *ptr){
     //right_thread link to successor
     if(ptr->right_thread == true){
-        if(ptr->right_child == head){
+        if(ptr->right_child == root){
             return NULL;
         }
         return ptr->right_child;
@@ -123,8 +131,8 @@ struct node *find_successor(struct node *head, struct node *ptr){
     }
 }
 
-void inorder(struct node *head){
-    struct node *ptr = head->left_child; //root
+void inorder(struct node *root){
+    struct node *ptr = root->left_child;
 
     //move to left-most
     while(ptr->left_thread == false){
@@ -133,7 +141,13 @@ void inorder(struct node *head){
 
     while(ptr){
         printf("%d ",ptr->data);
-        ptr = find_successor(head, ptr);
+        ptr = find_successor(root, ptr);
     }
     printf("\n");
 }
+
+/*
+後記：
+在做thread的時候一定要用一個虛的node，
+因為這樣才有辦法處理traverse順序中的第一個和最後一個node。
+*/
