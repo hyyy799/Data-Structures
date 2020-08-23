@@ -17,14 +17,14 @@ struct node{
 };
 
 struct node* insert(struct node *root, int input);
-struct node *find_successor(struct node *root, struct node *ptr);
+struct node *find_successor(struct node *ptr);
 void inorder(struct node *root);
 
 int main(){
-    struct node *root = malloc(sizeof(struct node));
+    struct node *root = (struct node *)malloc(sizeof(struct node));
     root->left_child = root;
     root->right_child = root;
-    root->left_thread = true;
+    root->left_thread = false;
     root->right_thread = false;
     
     root = insert(root, 20); 
@@ -55,8 +55,8 @@ struct node *insert(struct node *root, int input){
         tmp->data = input;
         tmp->left_thread = true;
         tmp->right_thread = true;
-        tmp->left_child = parent->left_child;
-        tmp->right_thread = parent;
+        tmp->left_child = parent->left_child; //root
+        tmp->right_child = parent; //root
 
         parent->left_thread = false;
         parent->left_child = tmp;
@@ -89,7 +89,7 @@ struct node *insert(struct node *root, int input){
 
     //creat new node and connect
     struct node *tmp;
-    tmp = malloc(sizeof(struct node));
+    tmp = (struct node *)malloc(sizeof(struct node));
     tmp->data = input;
     tmp->left_thread = true;
     tmp->right_thread = true;
@@ -102,7 +102,7 @@ struct node *insert(struct node *root, int input){
         parent->left_child = tmp;
     }
 
-    else{ // input < parent->data
+    else{ // input >= parent->data
         tmp->left_child = parent;
         tmp->right_child = parent->right_child; 
         parent->right_thread = false; //parent has right child
@@ -112,12 +112,9 @@ struct node *insert(struct node *root, int input){
     return root; 
 }
 
-struct node *find_successor(struct node *root, struct node *ptr){
+struct node *find_successor(struct node *ptr){
     //right_thread link to successor
     if(ptr->right_thread == true){
-        if(ptr->right_child == root){
-            return NULL;
-        }
         return ptr->right_child;
     }
 
@@ -138,10 +135,15 @@ void inorder(struct node *root){
     while(ptr->left_thread == false){
         ptr = ptr->left_child;
     }
+    printf("%d ",ptr->data);
 
-    while(ptr){
+    while(1){
+        ptr = find_successor(ptr);
+        if(ptr == root){
+            //printf("finish\n");
+            break;
+        }
         printf("%d ",ptr->data);
-        ptr = find_successor(root, ptr);
     }
     printf("\n");
 }
